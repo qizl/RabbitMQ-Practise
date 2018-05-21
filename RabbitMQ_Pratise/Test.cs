@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -32,16 +31,25 @@ namespace RabbitMQ_Pratise
             {
                 using (var channel = connection.CreateModel())
                 {
+                    //channel.QueueDeclare("hello", false, false, false, null);
+
+                    //var consumer = new QueueingBasicConsumer(channel);
+                    //channel.BasicConsume("hello", true, consumer);
+
+                    //while (true)
+                    //{
+                    //    var ea = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
+                    //    var message = Encoding.UTF8.GetString(ea.Body);
+                    //}
                     channel.QueueDeclare("hello", false, false, false, null);
 
-                    var consumer = new QueueingBasicConsumer(channel);
-                    channel.BasicConsume("hello", true, consumer);
-
-                    while (true)
+                    var consumer = new EventingBasicConsumer(channel);
+                    consumer.Received += (model, ea) =>
                     {
-                        var ea = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
-                        var message = Encoding.UTF8.GetString(ea.Body);
-                    }
+                        var body = ea.Body;
+                        var message = Encoding.UTF8.GetString(body);
+                    };
+                    channel.BasicConsume("hello", true, consumer);
                 }
             }
         }
