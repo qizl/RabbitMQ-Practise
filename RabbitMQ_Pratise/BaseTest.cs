@@ -35,7 +35,7 @@ namespace RabbitMQ_Pratise
             {
                 using (var channel = connection.CreateModel())
                 {
-                    //channel.QueueDeclare("hello", false, false, false, null);
+                    //channel.QueueDeclare("hello", true, false, false, null);
 
                     //var consumer = new QueueingBasicConsumer(channel);
                     //channel.BasicConsume("hello", true, consumer);
